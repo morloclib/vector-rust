@@ -1,0 +1,4 @@
+module test-vector-rust (test)
+
+import vector.test (test)
+import vector-rust
