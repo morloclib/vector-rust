@@ -11,40 +11,42 @@
 
 // zeros/ones are determined by the RESULT element type, not by any argument.
 // This trait supplies the 0 and 1 of each numeric type; Rust resolves the type
-// parameter from the call-site context. Also reused by tensor-rust.
-trait MorlocNumConst {
-    fn m_zero() -> Self;
-    fn m_one() -> Self;
+// parameter from the call-site context. tensor-rust declares its own
+// equivalent: a sourced .rs reaches a pool only when its symbols are used,
+// so neither file may depend on the other being present.
+trait MorlocVectorNumConst {
+    fn m_vector_zero() -> Self;
+    fn m_vector_one() -> Self;
 }
-macro_rules! morloc_num_const {
+macro_rules! morloc_vector_num_const {
     ($($t:ty),*) => {
-        $(impl MorlocNumConst for $t {
-            fn m_zero() -> Self { 0 as $t }
-            fn m_one() -> Self { 1 as $t }
+        $(impl MorlocVectorNumConst for $t {
+            fn m_vector_zero() -> Self { 0 as $t }
+            fn m_vector_one() -> Self { 1 as $t }
         })*
     };
 }
-morloc_num_const!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
+morloc_vector_num_const!(i8, i16, i32, i64, u8, u16, u32, u64, f32, f64);
 
 // A negative length would wrap to a near-2^64 usize under `as`, turning a bad
 // input into an OOM/capacity-overflow abort; throw a catchable morloc error.
-fn usz(d: i64) -> usize {
+fn morloc_vector_usz(d: i64) -> usize {
     if d < 0 {
         rustmorloc::morloc_throw("vector length must be non-negative");
     }
     d as usize
 }
 
-pub fn morloc_zeros1<A: MorlocNumConst + Clone>(d1: i64) -> Vec<A> {
-    vec![A::m_zero(); usz(d1)]
+pub fn morloc_zeros1<A: MorlocVectorNumConst + Clone>(d1: i64) -> Vec<A> {
+    vec![A::m_vector_zero(); morloc_vector_usz(d1)]
 }
 
-pub fn morloc_ones1<A: MorlocNumConst + Clone>(d1: i64) -> Vec<A> {
-    vec![A::m_one(); usz(d1)]
+pub fn morloc_ones1<A: MorlocVectorNumConst + Clone>(d1: i64) -> Vec<A> {
+    vec![A::m_vector_one(); morloc_vector_usz(d1)]
 }
 
 pub fn morloc_fill1<A: Clone>(v: &A, d1: i64) -> Vec<A> {
-    vec![v.clone(); usz(d1)]
+    vec![v.clone(); morloc_vector_usz(d1)]
 }
 
 pub fn morloc_vec_concat<A: Clone>(xs: &[A], ys: &[A]) -> Vec<A> {
