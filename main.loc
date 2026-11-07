@@ -40,7 +40,12 @@ instance Sizeable (Vector n a) where
   source Rust from "vector.rs" ("morloc_vec_size" as size)
 
 instance Eq (Vector n a) where
-  source Rust from "vector.rs" ("morloc_vec_eq" as (==))
+  source Rust from "vector.rs" ("morloc_vec_eq" as (==), "morloc_vec_ne" as (!=))
 
 instance Ord (Vector n a) where
-  source Rust from "vector.rs" ("morloc_vec_le" as (<=))
+  source Rust from "vector.rs"
+    ( "morloc_vec_lt" as (<)
+    , "morloc_vec_le" as (<=)
+    , "morloc_vec_gt" as (>)
+    , "morloc_vec_ge" as (>=)
+    )

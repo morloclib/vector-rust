@@ -97,6 +97,22 @@ pub fn morloc_vec_le<A: PartialOrd>(xs: &[A], ys: &[A]) -> bool {
     xs <= ys
 }
 
+pub fn morloc_vec_ne<A: PartialEq>(xs: &[A], ys: &[A]) -> bool {
+    xs != ys
+}
+
+pub fn morloc_vec_lt<A: PartialOrd>(xs: &[A], ys: &[A]) -> bool {
+    xs < ys
+}
+
+pub fn morloc_vec_gt<A: PartialOrd>(xs: &[A], ys: &[A]) -> bool {
+    xs > ys
+}
+
+pub fn morloc_vec_ge<A: PartialOrd>(xs: &[A], ys: &[A]) -> bool {
+    xs >= ys
+}
+
 // Negative indices count from the end (Python semantics). The index arrives as
 // ?I64 to match __to_index__'s return shape.
 pub fn morloc_vec_at<A: Clone>(oi: Option<i64>, xs: &[A]) -> A {
