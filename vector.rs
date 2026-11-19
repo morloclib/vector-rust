@@ -60,6 +60,10 @@ pub fn morloc_vec_size<A>(xs: &[A]) -> u64 {
     xs.len() as u64
 }
 
+pub fn morloc_vec_length<A>(xs: &[A]) -> i64 {
+    xs.len() as i64
+}
+
 pub fn morloc_vec_map<A, B, F: Fn(&A) -> B>(f: F, xs: &[A]) -> Vec<B> {
     xs.iter().map(|x| f(x)).collect()
 }
